@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RVE Trading PLC — Global Import & Export</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-pale: #F5EDD6;
+    --deep: #0D1B2A;
+    --deep2: #152030;
+    --navy: #1A2E42;
+    --slate: #2C4059;
+    --muted: #6B8299;
+    --text: #E8EDF2;
+    --text2: #A8BCCF;
+    --white: #FFFFFF;
+    --border: rgba(201,168,76,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--deep);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 5%;
+    background: rgba(13,27,42,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .logo-mark {
+    width: 42px; height: 42px;
+    border: 1.5px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 1px;
+    transform: rotate(45deg);
+  }
+  .logo-mark span { transform: rotate(-45deg); display: block; }
+
+  .logo-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 600;
+    color: var(--white);
+    letter-spacing: 2px;
+    line-height: 1.1;
+  }
+  .logo-text small {
+    display: block; font-size: 10px;
+    color: var(--gold); letter-spacing: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300; text-transform: uppercase;
+  }
+
+  nav ul {
+    display: flex; gap: 2.5rem; list-style: none;
+  }
+  nav ul a {
+    text-decoration: none; color: var(--text2);
+    font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;
+    font-weight: 400;
+    transition: color 0.2s;
+  }
+  nav ul a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold) !important;
+    padding: 8px 22px;
+    cursor: pointer;
+    font-size: 12px !important;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.3s !important;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+  }
+  .nav-cta:hover {
+    background: var(--gold) !important;
+    color: var(--deep) !important;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+    padding: 0 5%;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 50%, rgba(26,46,66,0.8) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,168,76,0.06) 0%, transparent 50%),
+      linear-gradient(135deg, var(--deep) 0%, var(--deep2) 100%);
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 70% 80% at 60% 50%, black, transparent);
+  }
+
+  .globe-ring {
+    position: absolute; right: -5%;  top: 50%; transform: translateY(-50%);
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.12);
+    animation: spin 40s linear infinite;
+  }
+  .globe-ring::before {
+    content: '';
+    position: absolute; inset: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.08);
+  }
+  .globe-ring::after {
+    content: '';
+    position: absolute; inset: 100px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.06);
+  }
+
+  .orbit-dot {
+    position: absolute; width: 8px; height: 8px;
+    background: var(--gold); border-radius: 50%;
+    top: 0; left: 50%; transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px rgba(201,168,76,0.6);
+    animation: orbit-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes spin { from { transform: translateY(-50%) rotate(0deg); } to { transform: translateY(-50%) rotate(360deg); } }
+  @keyframes orbit-pulse { 0%, 100% { opacity: 0.8; transform: translate(-50%,-50%) scale(1); } 50% { opacity: 1; transform: translate(-50%,-50%) scale(1.3); } }
+
+  .hero-content { position: relative; z-index: 2; max-width: 680px; }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 12px;
+    margin-bottom: 2rem;
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); font-weight: 400;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: ''; flex: 1; height: 1px; background: var(--gold); opacity: 0.5;
+    width: 30px;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 7vw, 92px);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 em {
+    font-style: italic; color: var(--gold);
+    display: block;
+  }
+
+  .hero-desc {
+    font-size: 15px; line-height: 1.8;
+    color: var(--text2); max-width: 480px;
+    margin-bottom: 3rem; font-weight: 300;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1.5rem; align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--deep);
+    padding: 14px 36px;
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    font-weight: 500; border: none; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: all 0.3s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  .btn-ghost {
+    color: var(--text2); font-size: 13px;
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; transition: color 0.3s;
+    letter-spacing: 0.5px;
+  }
+  .btn-ghost:hover { color: var(--white); }
+  .btn-ghost .arrow {
+    width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 16px; transition: all 0.3s;
+  }
+  .btn-ghost:hover .arrow { border-color: var(--gold); color: var(--gold); }
+
+  .hero-stats {
+    position: absolute; bottom: 4rem; left: 5%; right: 5%;
+    display: flex; gap: 4rem; z-index: 2;
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px; font-weight: 300; color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-top: 6px; font-weight: 400;
+  }
+
+  /* ── SECTION BASE ── */
+  section { padding: 8rem 5%; }
+
+  .section-eyebrow {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.25rem; font-weight: 400;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .section-eyebrow::after {
+    content: ''; width: 40px; height: 1px; background: var(--gold); opacity: 0.5;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 58px); font-weight: 300;
+    color: var(--white); line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  .section-desc {
+    font-size: 15px; line-height: 1.8; color: var(--text2);
+    max-width: 520px; font-weight: 300;
+  }
+
+  /* ── ABOUT ── */
+  .about {
+    background: var(--deep2);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem;
+    align-items: center;
+  }
+
+  .about-visual {
+    position: relative; aspect-ratio: 4/5;
+  }
+  .about-frame {
+    position: absolute; inset: 0;
+    border: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--navy) 0%, var(--slate) 100%);
+    overflow: hidden;
+  }
+  .about-frame-inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 120px; font-weight: 300; color: rgba(201,168,76,0.1);
+    letter-spacing: -5px;
+  }
+  .about-accent {
+    position: absolute; top: 30px; right: -30px;
+    width: 200px; height: 200px;
+    border: 1px solid rgba(201,168,76,0.3);
+    transform: rotate(15deg);
+  }
+  .about-badge {
+    position: absolute; bottom: 40px; left: -30px;
+    background: var(--gold);
+    color: var(--deep);
+    padding: 20px 28px;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .about-badge .num { font-size: 40px; font-weight: 600; line-height: 1; }
+  .about-badge .label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+
+  .about-content .values {
+    margin-top: 3rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+  }
+  .value-card {
+    border-left: 2px solid var(--gold);
+    padding-left: 1.25rem;
+  }
+  .value-card h4 {
+    font-size: 13px; font-weight: 500; color: var(--white);
+    letter-spacing: 0.5px; margin-bottom: 6px;
+  }
+  .value-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ── SERVICES ── */
+  .services { background: var(--deep); }
+
+  .services-header {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: end; margin-bottom: 5rem;
+  }
+
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .service-card {
+    background: var(--deep);
+    padding: 3rem 2.5rem;
+    transition: all 0.4s;
+    position: relative; overflow: hidden;
+    cursor: default;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold); transform: scaleX(0);
+    transition: transform 0.4s; transform-origin: left;
+  }
+  .service-card:hover { background: var(--navy); }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-icon {
+    width: 56px; height: 56px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 2rem;
+    color: var(--gold);
+    transition: all 0.4s;
+  }
+  .service-card:hover .service-icon {
+    background: var(--gold); color: var(--deep); border-color: var(--gold);
+  }
+
+  .service-num {
+    position: absolute; top: 2rem; right: 2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; font-weight: 300; color: rgba(201,168,76,0.06);
+    line-height: 1;
+  }
+
+  .service-card h3 {
+    font-size: 17px; font-weight: 500; color: var(--white);
+    margin-bottom: 1rem; letter-spacing: 0.3px;
+  }
+  .service-card p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+  .service-link {
+    margin-top: 1.5rem;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gold); font-weight: 400;
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .service-card:hover .service-link { opacity: 1; }
+
+  /* ── PROCESS ── */
+  .process { background: var(--deep2); }
+
+  .process-steps {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; margin-top: 5rem;
+    position: relative;
+  }
+  .process-steps::before {
+    content: '';
+    position: absolute; top: 28px; left: 14%;  right: 14%;
+    height: 1px; background: var(--border);
+    z-index: 0;
+  }
+
+  .step {
+    text-align: center; padding: 0 1.5rem;
+    position: relative; z-index: 1;
+  }
+
+  .step-circle {
+    width: 56px; height: 56px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 400; color: var(--gold);
+    background: var(--deep2);
+    transition: all 0.3s;
+    cursor: default;
+  }
+  .step:hover .step-circle { background: var(--gold); color: var(--deep); }
+
+  .step h4 {
+    font-size: 14px; font-weight: 500; color: var(--white);
+    margin-bottom: 10px; letter-spacing: 0.5px;
+  }
+  .step p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ── COMMODITIES ── */
+  .commodities { background: var(--deep); }
+
+  .commodities-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 4rem;
+  }
+
+  .commodity-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto;
+    gap: 2px; background: var(--border);
+  }
+
+  .commodity-item {
+    background: var(--deep2); padding: 2.5rem 2rem;
+    display: flex; flex-direction: column; gap: 12px;
+    transition: background 0.3s;
+    cursor: default;
+  }
+  .commodity-item:hover { background: var(--navy); }
+  .commodity-item.featured {
+    grid-column: span 2;
+    background: linear-gradient(135deg, var(--navy) 0%, rgba(201,168,76,0.08) 100%);
+    padding: 3rem;
+  }
+
+  .commodity-icon { font-size: 32px; margin-bottom: 8px; }
+  .commodity-item h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 400; color: var(--white);
+  }
+  .commodity-item p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .commodity-tag {
+    display: inline-block; padding: 4px 12px;
+    border: 1px solid var(--border); font-size: 10px;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gold); width: fit-content;
+  }
+
+  /* ── REGIONS ── */
+  .regions {
+    background: var(--deep2);
+    display: grid; grid-template-columns: 1fr 1.4fr;
+    gap: 6rem; align-items: start;
+  }
+
+  .region-list { margin-top: 3rem; }
+  .region-item {
+    display: flex; align-items: center; gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--border);
+    cursor: default; transition: all 0.3s;
+  }
+  .region-item:hover { padding-left: 1rem; }
+  .region-item:hover .region-flag { border-color: var(--gold); }
+  .region-flag {
+    width: 48px; height: 48px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0; transition: border-color 0.3s;
+  }
+  .region-info h4 {
+    font-size: 14px; font-weight: 500; color: var(--white); margin-bottom: 3px;
+  }
+  .region-info p { font-size: 12px; color: var(--muted); }
+
+  .world-visual {
+    position: relative;
+    border: 1px solid var(--border); padding: 3rem;
+    background: var(--navy);
+    min-height: 400px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .world-map-svg { width: 100%; opacity: 0.6; }
+
+  .connection-dots {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+
+  .conn-dot {
+    position: absolute;
+    width: 6px; height: 6px;
+    background: var(--gold); border-radius: 50%;
+    box-shadow: 0 0 12px rgba(201,168,76,0.8);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  .conn-dot:nth-child(2) { animation-delay: 0.4s; }
+  .conn-dot:nth-child(3) { animation-delay: 0.8s; }
+  .conn-dot:nth-child(4) { animation-delay: 1.2s; }
+  .conn-dot:nth-child(5) { animation-delay: 1.6s; }
+
+  @keyframes pulse-dot {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(2); opacity: 1; }
+  }
+
+  /* ── WHY US ── */
+  .why {
+    background: var(--deep);
+    text-align: center; padding: 8rem 5%;
+  }
+  .why .section-eyebrow { justify-content: center; }
+  .why .section-eyebrow::after { display: none; }
+  .why .section-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--gold); opacity: 0.5; }
+
+  .why-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 3rem; margin-top: 5rem; text-align: left;
+  }
+
+  .why-card {
+    padding: 3rem 2.5rem;
+    border: 1px solid var(--border);
+    transition: all 0.4s;
+    position: relative; overflow: hidden;
+    cursor: default;
+  }
+  .why-card::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .why-card:hover { background: var(--navy); border-color: rgba(201,168,76,0.4); }
+  .why-card:hover::after { opacity: 1; }
+
+  .why-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px; font-weight: 300;
+    color: rgba(201,168,76,0.12); line-height: 0.8;
+    margin-bottom: 1.5rem;
+  }
+  .why-card h3 { font-size: 17px; font-weight: 500; color: var(--white); margin-bottom: 1rem; }
+  .why-card p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+  /* ── CONTACT ── */
+  .contact {
+    background: var(--deep2);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem;
+  }
+
+  .contact-form { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .form-field { display: flex; flex-direction: column; gap: 8px; }
+  .form-field label {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); font-weight: 400;
+  }
+  .form-field input, .form-field textarea, .form-field select {
+    background: rgba(201,168,76,0.04);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 14px 16px;
+    font-size: 14px; font-family: 'DM Sans', sans-serif;
+    outline: none; transition: border-color 0.3s;
+    resize: none;
+  }
+  .form-field input:focus, .form-field textarea:focus, .form-field select:focus {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.06);
+  }
+  .form-field select option { background: var(--deep2); }
+
+  .contact-info { padding-top: 2rem; }
+  .contact-info .info-items { margin-top: 3rem; display: flex; flex-direction: column; gap: 2rem; }
+  .info-item { display: flex; gap: 1.25rem; }
+  .info-icon {
+    width: 44px; height: 44px; flex-shrink: 0;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: var(--gold);
+  }
+  .info-item h4 {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  .info-item p { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--deep);
+    border-top: 1px solid var(--border);
+    padding: 4rem 5%;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem;
+  }
+
+  footer .footer-brand p {
+    font-size: 13px; color: var(--muted); line-height: 1.7;
+    margin-top: 1rem; max-width: 280px;
+  }
+
+  .footer-col h4 {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1.5rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col ul a {
+    text-decoration: none; font-size: 13px; color: var(--text2);
+    transition: color 0.2s;
+  }
+  .footer-col ul a:hover { color: var(--gold); }
+
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 5%; margin-top: 0;
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--muted);
+    background: var(--deep);
+  }
+
+  /* ── TICKER ── */
+  .ticker {
+    background: var(--gold);
+    overflow: hidden;
+    padding: 12px 0;
+  }
+  .ticker-track {
+    display: flex; gap: 4rem;
+    animation: ticker 25s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-item {
+    display: flex; align-items: center; gap: 16px;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--deep); font-weight: 500;
+  }
+  .ticker-dot { width: 4px; height: 4px; background: var(--deep); border-radius: 50%; opacity: 0.4; }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Animations */
+  .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  .slide-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .slide-left.visible { opacity: 1; transform: translateX(0); }
+
+  @media (max-width: 900px) {
+    nav ul { display: none; }
+    .about, .regions, .contact { grid-template-columns: 1fr; }
+    .services-grid, .why-grid { grid-template-columns: 1fr; }
+    .commodity-grid { grid-template-columns: 1fr 1fr; }
+    .commodity-item.featured { grid-column: span 2; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .services-header { grid-template-columns: 1fr; }
+    footer { grid-template-columns: 1fr 1fr; }
+    .hero-stats { gap: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-mark"><span>RVE</span></div>
+    <div class="logo-text">RVE Trading
+      <small>PLC</small>
+    </div>
+  </div>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#commodities">Commodities</a></li>
+    <li><a href="#regions">Markets</a></li>
+    <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="globe-ring">
+    <div class="orbit-dot"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Global Trade Solutions</div>
+    <h1>
+      Connecting Markets,<br>
+      <em>Moving Worlds</em>
+    </h1>
+    <p class="hero-desc">
+      RVE Trading PLC facilitates premium import and export trade across East Africa, the Middle East, and Europe — with integrity, precision, and decades of market insight.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Start Trading</a>
+      <a href="#services" class="btn-ghost">
+        <span class="arrow">→</span>
+        Explore Services
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">4+</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">20+</div>
+      <div class="stat-label">Trade Partners</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">Since 2022</div>
+      <div class="stat-label">Est. Addis Ababa</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">$10M+</div>
+      <div class="stat-label">Annual Trade Volume</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="ticker-dot"></span> Coffee Exports</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Textile Imports</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Agricultural Commodities</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Mining & Minerals</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Logistics & Freight</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Trade Finance</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> East Africa Markets</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Export Compliance</span>
+    <!-- Duplicate for seamless loop -->
+    <span class="ticker-item"><span class="ticker-dot"></span> Coffee Exports</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Textile Imports</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Agricultural Commodities</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Mining & Minerals</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Logistics & Freight</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Trade Finance</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> East Africa Markets</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Export Compliance</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-visual slide-left">
+    <div class="about-frame">
+      <div class="about-frame-inner">RVE</div>
+    </div>
+    <div class="about-accent"></div>
+    <div class="about-badge">
+      <div class="num">4+</div>
+      <div class="label">Years of Excellence</div>
+    </div>
+  </div>
+
+  <div class="about-content fade-in">
+    <div class="section-eyebrow">Who We Are</div>
+    <h2 class="section-title">A Legacy of<br><em>Trusted Trade</em></h2>
+    <p class="section-desc">
+      Founded in 2022 by <strong style="color:var(--gold);font-weight:500;">Rediet Alemayehu</strong>, RVE Trading PLC was built with a clear vision — to bridge the trade gap between Ethiopia and global markets. In just four years, we have grown into a trusted import-export firm with over 20 active trade partners and $10M+ in annual trade volume.
+    </p>
+    <p class="section-desc" style="margin-top: 1rem;">
+      We specialize in the sourcing, negotiation, logistics, and delivery of high-value commodities — serving governments, enterprises, and private clients with equal dedication.
+    </p>
+    <div class="values">
+      <div class="value-card">
+        <h4>Integrity</h4>
+        <p>Every contract, every shipment — conducted with complete transparency.</p>
+      </div>
+      <div class="value-card">
+        <h4>Precision</h4>
+        <p>Meticulous documentation and regulatory compliance, every time.</p>
+      </div>
+      <div class="value-card">
+        <h4>Network</h4>
+        <p>20+ cultivated trade partnerships across Africa, the Middle East, Asia & Europe since 2022.</p>
+      </div>
+      <div class="value-card">
+        <h4>Agility</h4>
+        <p>Fast-moving markets demand fast-moving solutions. We deliver both.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-header">
+    <div class="fade-in">
+      <div class="section-eyebrow">What We Do</div>
+      <h2 class="section-title">End-to-End<br><em>Trade Services</em></h2>
+    </div>
+    <p class="section-desc fade-in" style="transition-delay: 0.15s;">
+      From source to destination, we manage every link in the supply chain — so you can focus on growing your business.
+    </p>
+  </div>
+
+  <div class="services-grid fade-in">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <div class="service-icon">📦</div>
+      <h3>Import Management</h3>
+      <p>Sourcing, procurement, and delivery of goods from global suppliers. We handle customs clearance, duties, and last-mile logistics.</p>
+      <div class="service-link">Learn More →</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-icon">🚢</div>
+      <h3>Export Services</h3>
+      <p>We prepare, certify, and ship Ethiopian and East African products to international buyers — coffee, sesame, pulses, and more.</p>
+      <div class="service-link">Learn More →</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-icon">📋</div>
+      <h3>Trade Compliance</h3>
+      <p>Navigating customs regulations, export permits, sanctions compliance, and bilateral trade agreements with expert precision.</p>
+      <div class="service-link">Learn More →</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <div class="service-icon">🏦</div>
+      <h3>Trade Finance</h3>
+      <p>Letter of credit facilitation, bank guarantees, and financing solutions to keep trade flowing smoothly.</p>
+      <div class="service-link">Learn More →</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <div class="service-icon">🔗</div>
+      <h3>Supply Chain Consulting</h3>
+      <p>Strategic advisory on market entry, supplier qualification, and logistics optimization for businesses expanding into Africa.</p>
+      <div class="service-link">Learn More →</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <div class="service-icon">🛃</div>
+      <h3>Freight & Customs</h3>
+      <p>Full-service freight forwarding by air, sea, and road — with dedicated customs brokerage at all major East African ports.</p>
+      <div class="service-link">Learn More →</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process">
+  <div style="text-align: center;" class="fade-in">
+    <div class="section-eyebrow" style="justify-content: center;">How It Works</div>
+    <h2 class="section-title">Our Trade <em>Process</em></h2>
+  </div>
+
+  <div class="process-steps">
+    <div class="step fade-in" style="transition-delay: 0.1s;">
+      <div class="step-circle">1</div>
+      <h4>Inquiry & Assessment</h4>
+      <p>Share your commodity, volume, and destination. We assess feasibility and market conditions.</p>
+    </div>
+    <div class="step fade-in" style="transition-delay: 0.2s;">
+      <div class="step-circle">2</div>
+      <h4>Sourcing & Negotiation</h4>
+      <p>We identify suppliers or buyers, negotiate terms, and draft commercial agreements.</p>
+    </div>
+    <div class="step fade-in" style="transition-delay: 0.3s;">
+      <div class="step-circle">3</div>
+      <h4>Compliance & Logistics</h4>
+      <p>All permits, inspections, and freight arrangements are managed end-to-end by our team.</p>
+    </div>
+    <div class="step fade-in" style="transition-delay: 0.4s;">
+      <div class="step-circle">4</div>
+      <h4>Delivery & Settlement</h4>
+      <p>Goods arrive on time and in full. Payment is settled securely through verified banking channels.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMMODITIES -->
+<section class="commodities" id="commodities">
+  <div class="commodities-header">
+    <div class="fade-in">
+      <div class="section-eyebrow">What We Trade</div>
+      <h2 class="section-title">Our <em>Commodities</em></h2>
+    </div>
+  </div>
+
+  <div class="commodity-grid fade-in">
+    <div class="commodity-item featured">
+      <div class="commodity-tag">Premier Export</div>
+      <div class="commodity-icon">☕</div>
+      <h3>Ethiopian Coffee</h3>
+      <p>Ethiopia is the birthplace of coffee. We export premium single-origin Arabica — Yirgacheffe, Sidama, Harrar — to specialty buyers worldwide with full traceability.</p>
+    </div>
+    <div class="commodity-item">
+      <div class="commodity-icon">🌿</div>
+      <h3>Sesame Seeds</h3>
+      <p>High-grade white and mixed sesame for food manufacturing and export to Asia and the Middle East.</p>
+    </div>
+    <div class="commodity-item">
+      <div class="commodity-icon">🫘</div>
+      <h3>Pulses & Lentils</h3>
+      <p>Chickpeas, red lentils, and haricot beans sourced directly from Ethiopian highland farms.</p>
+    </div>
+    <div class="commodity-item">
+      <div class="commodity-icon">🏭</div>
+      <h3>Machinery & Equipment</h3>
+      <p>Industrial and agricultural machinery imported for Ethiopian businesses and government projects.</p>
+    </div>
+    <div class="commodity-item">
+      <div class="commodity-icon">🧵</div>
+      <h3>Textiles</h3>
+      <p>Quality fabrics and garments imported from Asia and exported through East African markets.</p>
+    </div>
+    <div class="commodity-item">
+      <div class="commodity-icon">⛏️</div>
+      <h3>Minerals</h3>
+      <p>Tantalum, gold, and construction minerals sourced responsibly with full certification.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REGIONS -->
+<section class="regions" id="regions">
+  <div class="fade-in">
+    <div class="section-eyebrow">Our Reach</div>
+    <h2 class="section-title">Global <em>Markets</em></h2>
+    <p class="section-desc">
+      From Addis Ababa to Dubai, from Rotterdam to Shanghai — RVE Trading PLC operates across key trade corridors with speed and reliability.
+    </p>
+
+    <div class="region-list">
+      <div class="region-item">
+        <div class="region-flag">🇪🇹</div>
+        <div class="region-info">
+          <h4>Ethiopia — Headquarters</h4>
+          <p>Addis Ababa · Export origin & primary office</p>
+        </div>
+      </div>
+      <div class="region-item">
+        <div class="region-flag">🇦🇪</div>
+        <div class="region-info">
+          <h4>United Arab Emirates</h4>
+          <p>Dubai · Re-export hub & Middle East distribution</p>
+        </div>
+      </div>
+      <div class="region-item">
+        <div class="region-flag">🇩🇪</div>
+        <div class="region-info">
+          <h4>Germany</h4>
+          <p>Hamburg · European market access & specialty buyers</p>
+        </div>
+      </div>
+      <div class="region-item">
+        <div class="region-flag">🇨🇳</div>
+        <div class="region-info">
+          <h4>China</h4>
+          <p>Shanghai · Machinery, textiles & commodities sourcing</p>
+        </div>
+      </div>
+      <div class="region-item">
+        <div class="region-flag">🇸🇦</div>
+        <div class="region-info">
+          <h4>Saudi Arabia</h4>
+          <p>Riyadh · Agricultural commodity exports</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="world-visual fade-in" style="transition-delay: 0.2s;">
+    <svg viewBox="0 0 600 380" class="world-map-svg" xmlns="http://www.w3.org/2000/svg">
+      <!-- Simplified decorative world outline -->
+      <rect width="600" height="380" fill="none"/>
+      <!-- Grid lines -->
+      <line x1="0" y1="95" x2="600" y2="95" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+      <line x1="0" y1="190" x2="600" y2="190" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+      <line x1="0" y1="285" x2="600" y2="285" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+      <line x1="150" y1="0" x2="150" y2="380" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+      <line x1="300" y1="0" x2="300" y2="380" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+      <line x1="450" y1="0" x2="450" y2="380" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+      <!-- Decorative continent shapes -->
+      <ellipse cx="310" cy="170" rx="60" ry="80" fill="rgba(201,168,76,0.08)" stroke="rgba(201,168,76,0.2)" stroke-width="0.5"/>
+      <ellipse cx="200" cy="175" rx="75" ry="55" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+      <ellipse cx="430" cy="140" rx="90" ry="65" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+      <ellipse cx="110" cy="160" rx="50" ry="40" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+      <ellipse cx="510" cy="260" rx="55" ry="45" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+      <!-- Trade lines -->
+      <path d="M 310 165 Q 370 100 400 135" stroke="rgba(201,168,76,0.4)" stroke-width="1" fill="none" stroke-dasharray="4 3"/>
+      <path d="M 310 165 Q 270 120 200 145" stroke="rgba(201,168,76,0.3)" stroke-width="1" fill="none" stroke-dasharray="4 3"/>
+      <path d="M 310 165 Q 400 160 445 140" stroke="rgba(201,168,76,0.3)" stroke-width="1" fill="none" stroke-dasharray="4 3"/>
+      <path d="M 310 165 Q 450 200 500 250" stroke="rgba(201,168,76,0.2)" stroke-width="1" fill="none" stroke-dasharray="4 3"/>
+      <!-- Primary dot (Ethiopia) -->
+      <circle cx="310" cy="165" r="5" fill="#C9A84C"/>
+      <circle cx="310" cy="165" r="10" fill="rgba(201,168,76,0.2)"/>
+      <circle cx="310" cy="165" r="16" fill="rgba(201,168,76,0.08)"/>
+      <!-- Partner dots -->
+      <circle cx="400" cy="135" r="4" fill="#C9A84C" opacity="0.8"/>
+      <circle cx="200" cy="145" r="3" fill="#C9A84C" opacity="0.7"/>
+      <circle cx="445" cy="140" r="3" fill="#C9A84C" opacity="0.7"/>
+      <circle cx="500" cy="252" r="3" fill="#C9A84C" opacity="0.6"/>
+      <!-- Labels -->
+      <text x="310" y="155" text-anchor="middle" fill="#C9A84C" font-size="9" font-family="DM Sans" letter-spacing="1">ETHIOPIA</text>
+      <text x="400" y="128" text-anchor="middle" fill="rgba(201,168,76,0.8)" font-size="8" font-family="DM Sans">UAE</text>
+      <text x="200" y="138" text-anchor="middle" fill="rgba(201,168,76,0.7)" font-size="8" font-family="DM Sans">EU</text>
+      <text x="445" y="133" text-anchor="middle" fill="rgba(201,168,76,0.7)" font-size="8" font-family="DM Sans">CHINA</text>
+    </svg>
+    <p style="text-align: center; font-size: 11px; letter-spacing: 2px; color: var(--muted); margin-top: 1.5rem; text-transform: uppercase;">Active Trade Corridors</p>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why">
+  <div class="section-eyebrow fade-in">Why RVE Trading</div>
+  <h2 class="section-title fade-in">The RVE <em>Advantage</em></h2>
+
+  <div class="why-grid">
+    <div class="why-card fade-in" style="transition-delay: 0.1s;">
+      <div class="why-num">01</div>
+      <h3>Deep Local Roots</h3>
+      <p>Born and headquartered in Ethiopia, we understand local regulations, market dynamics, and supplier networks better than any foreign intermediary.</p>
+    </div>
+    <div class="why-card fade-in" style="transition-delay: 0.2s;">
+      <div class="why-num">02</div>
+      <h3>End-to-End Ownership</h3>
+      <p>We don't broker — we operate. From source to destination, our team manages every step, reducing your risk and administrative burden.</p>
+    </div>
+    <div class="why-card fade-in" style="transition-delay: 0.3s;">
+      <div class="why-num">03</div>
+      <h3>Regulatory Mastery</h3>
+      <p>Ethiopia's trade environment is complex. Our compliance team has navigated it since 2022, keeping every shipment on schedule and fully documented.</p>
+    </div>
+    <div class="why-card fade-in" style="transition-delay: 0.1s;">
+      <div class="why-num">04</div>
+      <h3>Trusted Partnerships</h3>
+      <p>We've built long-term relationships with major banks, freight carriers, and government agencies across 3 continents.</p>
+    </div>
+    <div class="why-card fade-in" style="transition-delay: 0.2s;">
+      <div class="why-num">05</div>
+      <h3>Competitive Pricing</h3>
+      <p>Our volume relationships and in-house logistics capabilities translate directly to better rates for your cargo and procurement.</p>
+    </div>
+    <div class="why-card fade-in" style="transition-delay: 0.3s;">
+      <div class="why-num">06</div>
+      <h3>Dedicated Account Teams</h3>
+      <p>Every client has a named trade manager. One point of contact, full accountability, no dropped balls.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="fade-in">
+    <div class="section-eyebrow">Get in Touch</div>
+    <h2 class="section-title">Start Your <em>Trade Journey</em></h2>
+    <p class="section-desc">
+      Ready to explore a trade partnership? Fill in the form and one of our trade specialists will reach out within 24 hours.
+    </p>
+
+    <div class="contact-info">
+      <div class="info-items">
+        <div class="info-item">
+          <div class="info-icon">📍</div>
+          <div>
+            <h4>Headquarters</h4>
+            <p>Bole Sub-city, Addis Ababa<br>Federal Democratic Republic of Ethiopia</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">📞</div>
+          <div>
+            <h4>Phone</h4>
+            <p>+251 911 435 708</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">✉️</div>
+          <div>
+            <h4>Email</h4>
+            <p>rve.tradingplc@gmail.com</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">⏰</div>
+          <div>
+            <h4>Business Hours</h4>
+            <p>Monday – Friday: 8:30 AM – 5:30 PM EAT<br>Saturday: 9:00 AM – 1:00 PM EAT</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-form fade-in" style="transition-delay: 0.2s;">
+    <div class="form-row">
+      <div class="form-field">
+        <label>First Name</label>
+        <input type="text" placeholder="Your first name">
+      </div>
+      <div class="form-field">
+        <label>Last Name</label>
+        <input type="text" placeholder="Your last name">
+      </div>
+    </div>
+    <div class="form-field">
+      <label>Email Address</label>
+      <input type="email" placeholder="your@company.com">
+    </div>
+    <div class="form-field">
+      <label>Company</label>
+      <input type="text" placeholder="Your company name">
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Trade Type</label>
+        <select>
+          <option value="">Select...</option>
+          <option>Import to Ethiopia</option>
+          <option>Export from Ethiopia</option>
+          <option>Trade Consulting</option>
+          <option>Freight & Customs</option>
+          <option>Trade Finance</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Commodity</label>
+        <select>
+          <option value="">Select...</option>
+          <option>Coffee</option>
+          <option>Sesame / Pulses</option>
+          <option>Machinery</option>
+          <option>Textiles</option>
+          <option>Minerals</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-field">
+      <label>Message</label>
+      <textarea rows="5" placeholder="Tell us about your trade requirements..."></textarea>
+    </div>
+    <button class="btn-primary" style="border: none; cursor: pointer;" onclick="alert('Thank you! We will contact you within 24 hours.')">
+      Send Inquiry
+    </button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="logo">
+      <div class="logo-mark" style="width:36px;height:36px;font-size:14px;"><span>RVE</span></div>
+      <div class="logo-text" style="font-size:16px;">RVE Trading
+        <small>PLC — Est. Ethiopia</small>
+      </div>
+    </div>
+    <p>A premier import and export company bridging Ethiopian and global markets with integrity, precision, and partnership.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Services</h4>
+    <ul>
+      <li><a href="#">Import Management</a></li>
+      <li><a href="#">Export Services</a></li>
+      <li><a href="#">Trade Compliance</a></li>
+      <li><a href="#">Trade Finance</a></li>
+      <li><a href="#">Freight & Customs</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Company</h4>
+    <ul>
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Our Team</a></li>
+      <li><a href="#">Certifications</a></li>
+      <li><a href="#">Partners</a></li>
+      <li><a href="#">News</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Markets</h4>
+    <ul>
+      <li><a href="#">East Africa</a></li>
+      <li><a href="#">Middle East</a></li>
+      <li><a href="#">Europe</a></li>
+      <li><a href="#">Asia</a></li>
+      <li><a href="#">Americas</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span>© 2026 RVE Trading PLC. All rights reserved. Founded 2022, Addis Ababa, Ethiopia. Owner: Rediet Alemayehu.</span>
+  <span>Privacy Policy · Terms of Trade · Compliance</span>
+</div>
+
+<script>
+  // Intersection Observer for animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in, .slide-left').forEach(el => observer.observe(el));
+
+  // Nav scroll effect
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 80) {
+      nav.style.padding = '0.9rem 5%';
+      nav.style.background = 'rgba(13,27,42,0.98)';
+    } else {
+      nav.style.padding = '1.25rem 5%';
+      nav.style.background = 'rgba(13,27,42,0.92)';
+    }
+  });
+</script>
+
+</body>
+</html>
